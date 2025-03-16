@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DonorController;
+use App\Http\Controllers\Auth\DonorController;
 use App\Http\Controllers\DonationDeliveryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FoodRequestController;
@@ -23,8 +23,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/restaurant/login', [App\Http\Controllers\Auth\RestaurantController::class, 'showLoginForm'])->name('restaurant.login');
     
     // Donor routes
-    Route::get('/donor/register', [App\Http\Controllers\Auth\DonorController::class, 'showRegisterForm'])->name('donor.register');
-    Route::get('/donor/login', [App\Http\Controllers\Auth\DonorController::class, 'showLoginForm'])->name('donor.login');
+    Route::get('/donor/register', [DonorController::class, 'showRegisterForm'])->name('donor.register');
+    Route::post('/donor/register', [DonorController::class, 'register']);
+    Route::get('/donor/login', [DonorController::class, 'showLoginForm'])->name('donor.login');
+    Route::post('/donor/login', [DonorController::class, 'login']);
     
     // Receiver routes
     Route::get('/receiver/register', [App\Http\Controllers\Auth\ReceiverController::class, 'showRegisterForm'])->name('receiver.register');
@@ -99,4 +101,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/receiver/dashboard', function () {
         return view('receiver.dashboard');
     })->name('receiver.dashboard');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/donor/dashboard', [DonorController::class, 'dashboard'])->name('donor.dashboard');
 });
